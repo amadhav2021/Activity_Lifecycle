@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Activity Lifecycle</string>
+    <string name="current">Current Session:</string>
+    <string name="filler">Text</string>
+    <string name="total">Totals:</string>
+    <string name="reset">Reset</string>
+</resources>
