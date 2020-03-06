@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -17,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
     TextView t_onCreate, t_onStart, t_onResume, t_onPause, t_onStop, t_onRestart, t_onDestroy;
     Button reset;
     
-    int[] current = new int[] {0, 0, 0, 0, 0, 0, 0};
-    int[] totals = new int[] {0, 0, 0, 0, 0, 0, 0};
+//    int[] current = new int[] {0, 0, 0, 0, 0, 0, 0};
+//    int[] totals = new int[] {0, 0, 0, 0, 0, 0, 0};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         t_onDestroy = findViewById(R.id.t_onDestroy);
 
         counter.setCreate(counter.getCreate()+1);
+        Log.i("debug", "onCreate");
         c_onCreate.setText("onCreate(): " + counter.getCreate());
         c_onStart.setText("onStart(): " + counter.getStart());
         c_onResume.setText("onResume(): " + counter.getResume());
@@ -62,60 +65,90 @@ public class MainActivity extends AppCompatActivity {
         t_onStop.setText("onStop(): " + preferences.getInt("stop", 0));
         t_onRestart.setText("onRestart(): " + preferences.getInt("restart", 0));
         t_onDestroy.setText("onDestroy(): " + preferences.getInt("destroy", 0));
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                counter.reset();
+
+                c_onCreate.setText("onCreate(): " + counter.getCreate());
+                c_onStart.setText("onStart(): " + counter.getStart());
+                c_onResume.setText("onResume(): " + counter.getResume());
+                c_onPause.setText("onPause(): " + counter.getPause());
+                c_onStop.setText("onStop(): " + counter.getStop());
+                c_onRestart.setText("onRestart(): " + counter.getRestart());
+                c_onDestroy.setText("onDestroy(): " + counter.getDestroy());
+
+                t_onCreate.setText("onCreate(): " + preferences.getInt("create", 0));
+                t_onStart.setText("onStart(): " + preferences.getInt("start", 0));
+                t_onResume.setText("onResume(): " + preferences.getInt("resume", 0));
+                t_onPause.setText("onPause(): " + preferences.getInt("pause", 0));
+                t_onStop.setText("onStop(): " + preferences.getInt("stop", 0));
+                t_onRestart.setText("onRestart(): " + preferences.getInt("restart", 0));
+                t_onDestroy.setText("onDestroy(): " + preferences.getInt("destroy", 0));
+            }
+        });
     }
 
     @Override
     public void onStart(){
-        super.onStart();
+        Log.i("debug", "onStart");
         counter.setStart(counter.getStart()+1);
         counter.shared_preferences("start");
         c_onStart.setText("onStart(): " + counter.getStart());
         t_onStart.setText("onStart(): " + preferences.getInt("start", 0));
+        super.onStart();
     }
 
     @Override
     public void onResume(){
-        super.onResume();
+        Log.i("debug", "onResume");
         counter.setResume(counter.getResume()+1);
         counter.shared_preferences("resume");
         c_onResume.setText("onResume(): " + counter.getResume());
-        c_onResume.setText("onResume(): " + preferences.getInt("resume", 0));
+        t_onResume.setText("onResume(): " + preferences.getInt("resume", 0));
+        super.onResume();
     }
 
     @Override
     public void onPause(){
-        super.onPause();
+        Log.i("debug", "onPause");
         counter.setPause(counter.getPause()+1);
         counter.shared_preferences("pause");
         c_onPause.setText("onPause(): " + counter.getPause());
         t_onPause.setText("onPause(): " + preferences.getInt("pause", 0));
+        super.onPause();
     }
 
     @Override
     public void onStop(){
-        super.onStop();
+        Log.i("debug", "onStop");
         counter.setStop(counter.getStop()+1);
         counter.shared_preferences("stop");
         c_onStop.setText("onStop(): " + counter.getStop());
         t_onStop.setText("onStop(): " + preferences.getInt("stop", 0));
+        super.onStop();
     }
 
     @Override
     public void onRestart() {
-        super.onRestart();
+        Log.i("debug", "onRestart");
         counter.setRestart(counter.getRestart()+1);
         counter.shared_preferences("restart");
         c_onRestart.setText("onRestart(): " + counter.getRestart());
         t_onRestart.setText("onRestart(): " + preferences.getInt("restart", 0));
+        super.onRestart();
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        Log.i("debug", "onDestroy");
         counter.setDestroy(counter.getDestroy()+1);
+        counter.setResume(0);
         counter.shared_preferences("destroy");
         c_onDestroy.setText("onDestroy(): " + counter.getStart());
         t_onDestroy.setText("onDestroy(): " + preferences.getInt("destroy", 0));
+        super.onDestroy();
     }
 
     private class Counter{
@@ -133,6 +166,26 @@ public class MainActivity extends AppCompatActivity {
         public void shared_preferences(String key){
             editor.putInt(key, preferences.getInt(key, 0)+1);
             editor.apply();
+        }
+
+        public void reset(){
+            editor.putInt("create", 0);
+            editor.putInt("start", 0);
+            editor.putInt("resume", 0);
+            editor.putInt("pause", 0);
+            editor.putInt("stop", 0);
+            editor.putInt("restart", 0);
+            editor.putInt("destroy", 0);
+
+            editor.apply();
+
+            setCreate(0);
+            setStart(0);
+            setResume(0);
+            setPause(0);
+            setStop(0);
+            setRestart(0);
+            setDestroy(0);
         }
 
         public int getCreate() {
